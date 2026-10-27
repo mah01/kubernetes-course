@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+spec:
+  storageClassName: do-block-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  volumes:
+    - name: myvolume
+      persistentVolumeClaim:
+        claimName: mypvc
+  containers:
+    - name: mynginx
+      image: nginx
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: myvolume
+# port-forward
+# create a file in /usr/share/nginx/html/index.html
+# delete the pod
+# apply again
+# see the changes there
